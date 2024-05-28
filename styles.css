@@ -24,9 +24,9 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #00f;  /* Sky blue text */
+    color: #87CEEB;  /* Sky blue text */
     font-size: 24px;
-    text-shadow: 0 0 10px #00f, 0 0 20px #00f, 0 0 30px #00f;
+    text-shadow: 0 0 10px #87CEEB, 0 0 20px #87CEEB, 0 0 30px #87CEEB;
     z-index: 1;
     user-select: none; /* Prevent text selection */
     pointer-events: none; /* Prevent interaction with the text */
