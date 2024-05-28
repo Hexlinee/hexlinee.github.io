@@ -68,6 +68,9 @@ function initMatterJs() {
     // Add procedural equations to the background
     addEquations();
 
+    // Add stars to the background
+    addStars();
+
     // Add keyboard controls for moving the view
     let offsetX = 0, offsetY = 0;
     const moveSpeed = 10;
@@ -95,9 +98,6 @@ function initMatterJs() {
             min: { x: offsetX, y: offsetY },
             max: { x: window.innerWidth + offsetX, y: window.innerHeight + offsetY }
         });
-
-        // Generate new blocks and stars along the way
-        generateNewBlocksAndStars(offsetX, offsetY, world);
     });
 }
 
@@ -132,29 +132,23 @@ function getRandomColor() {
     return color;
 }
 
-// Function to generate new blocks and stars
-function generateNewBlocksAndStars(offsetX, offsetY, world) {
-    for (let i = 0; i < 5; i++) {
-        const x = offsetX + Math.random() * window.innerWidth;
-        const y = offsetY + Math.random() * window.innerHeight;
-        const box = Bodies.rectangle(x, y, 60, 60, { 
-            render: { fillStyle: getRandomColor() }
-        });
-        Composite.add(world, box);
-    }
-
-    // Generate new stars
-    addStars();
-}
-
 // Function to add stars to the background
 function addStars() {
-    const stars = document.querySelector('.stars');
-    if (!stars) {
-        const starContainer = document.createElement('div');
-        starContainer.className = 'stars';
-        document.body.appendChild(starContainer);
+    const starContainer = document.querySelector('.stars');
+    if (starContainer) {
+        starContainer.style.background = createStarPattern();
     }
+}
+
+// Function to create a star pattern
+function createStarPattern() {
+    let pattern = '';
+    for (let i = 0; i < 1000; i++) {
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        pattern += `${x}% ${y}%, `;
+    }
+    return `radial-gradient(circle, white 2%, transparent 2%) repeat, ${pattern.slice(0, -2)}`;
 }
 
 // Ensure Matter.js is loaded before initializing the simulation
@@ -168,9 +162,4 @@ function loadScript(src, callback) {
 // Load Matter.js from CDN and initialize the simulation
 document.addEventListener('DOMContentLoaded', () => {
     loadScript('https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js', initMatterJs);
-
-    // Add moon to the sky
-    const moon = document.createElement('div');
-    moon.className = 'moon';
-    document.body.appendChild(moon);
 });
