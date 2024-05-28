@@ -77,4 +77,6 @@ function loadScript(src, callback) {
 }
 
 // Load Matter.js from CDN and initialize the simulation
-loadScript('https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js', initMatterJs);
+document.addEventListener('DOMContentLoaded', () => {
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js', initMatterJs);
+});
