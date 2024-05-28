@@ -68,9 +68,6 @@ function initMatterJs() {
     // Add procedural equations to the background
     addEquations();
 
-    // Add stars to the background
-    addStars();
-
     // Add keyboard controls for moving the view
     let offsetX = 0, offsetY = 0;
     const moveSpeed = 10;
@@ -135,20 +132,13 @@ function getRandomColor() {
 // Function to add stars to the background
 function addStars() {
     const starContainer = document.querySelector('.stars');
-    if (starContainer) {
-        starContainer.style.background = createStarPattern();
+    for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        starContainer.appendChild(star);
     }
-}
-
-// Function to create a star pattern
-function createStarPattern() {
-    let pattern = '';
-    for (let i = 0; i < 1000; i++) {
-        const x = Math.random() * 100;
-        const y = Math.random() * 100;
-        pattern += `${x}% ${y}%, `;
-    }
-    return `radial-gradient(circle, white 1px, transparent 1px) repeat, ${pattern.slice(0, -2)}`;
 }
 
 // Ensure Matter.js is loaded before initializing the simulation
@@ -163,3 +153,16 @@ function loadScript(src, callback) {
 document.addEventListener('DOMContentLoaded', () => {
     loadScript('https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js', initMatterJs);
 });
+
+// Add CSS for stars
+const starStyle = document.createElement('style');
+starStyle.innerHTML = `
+    .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: white;
+        border-radius: 50%;
+    }
+`;
+document.head.appendChild(starStyle);
