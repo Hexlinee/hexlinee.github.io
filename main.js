@@ -65,8 +65,8 @@ function initMatterJs() {
         Matter.Body.setPosition(ground, { x: window.innerWidth / 2, y: window.innerHeight - 10 });
     });
 
-    // Add procedural flickering lights to the background.
-    addEquations();
+    // Add procedural flickering stars to the background.
+    addStars();
 
     // Add keyboard controls for moving the view
     let offsetX = 0, offsetY = 0;
@@ -96,38 +96,42 @@ function initMatterJs() {
             max: { x: window.innerWidth + offsetX, y: window.innerHeight + offsetY }
         });
     });
+
+    // Add night sounds to the background
+    addNightSounds();
 }
 
-// Function to add procedural flickering lights to the background
-function addEquations() {
+// Function to add procedural flickering stars to the background
+function addStars() {
     const container = document.createElement('div');
-    container.className = 'flickering-lights';
+    container.className = 'flickering-stars';
 
-    for (let i = 0; i < 20; i++) {
-        const light = document.createElement('div');
-        light.className = 'light';
-        light.style.position = 'absolute';
-        light.style.top = `${Math.random() * 100}%`;
-        light.style.left = `${Math.random() * 100}%`;
-        container.appendChild(light);
+    for (let i = 0; i < 100; i++) {  // Increase the number of stars for higher density
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.position = 'absolute';
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        container.appendChild(star);
     }
 
     document.body.appendChild(container);
 
     const style = document.createElement('style');
     style.innerHTML = `
-        .flickering-lights .light {
-            width: 10px;
-            height: 10px;
+        .flickering-stars .star {
+            width: 2px;
+            height: 2px;
             border-radius: 50%;
-            background-color: yellow;
-            opacity: 0;
-            animation: flicker 1s infinite;
+            background-color: white;
+            opacity: 0.5;
+            animation: flicker 2s infinite;
         }
 
         @keyframes flicker {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.5; }
+            25% { opacity: 1; }
+            75% { opacity: 0.3; }
         }
     `;
     document.head.appendChild(style);
@@ -141,6 +145,15 @@ function getRandomColor() {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+}
+
+// Function to add night sounds to the background
+function addNightSounds() {
+    const audio = document.createElement('audio');
+    audio.src = 'night_sounds.mp3';  // Ensure you have a night_sounds.mp3 file in your project directory
+    audio.loop = true;
+    audio.autoplay = true;
+    document.body.appendChild(audio);
 }
 
 // Ensure Matter.js is loaded before initializing the simulation
