@@ -123,7 +123,7 @@ function addStars() {
             width: 2px;
             height: 2px;
             border-radius: 50%;
-            background-color: white;
+            background-color: white;  // Ensure stars are white
             opacity: 0.5;
             animation: flicker 2s infinite;
         }
@@ -167,9 +167,4 @@ function loadScript(src, callback) {
 // Load Matter.js from CDN and initialize the simulation
 document.addEventListener('DOMContentLoaded', () => {
     loadScript('https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js', initMatterJs);
-
-    // Add moon to the sky
-    const moon = document.createElement('div');
-    moon.className = 'moon';
-    document.body.appendChild(moon);
 });
