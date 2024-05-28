@@ -69,6 +69,35 @@ function initMatterJs() {
 
     // Add procedural equations to the background
     addEquations();
+
+    // Add keyboard controls for moving the view
+    let offsetX = 0, offsetY = 0;
+    const moveSpeed = 10;
+
+    window.addEventListener('keydown', (event) => {
+        switch (event.key) {
+            case 'ArrowUp':
+            case 'w':
+                offsetY -= moveSpeed;
+                break;
+            case 'ArrowDown':
+            case 's':
+                offsetY += moveSpeed;
+                break;
+            case 'ArrowLeft':
+            case 'a':
+                offsetX -= moveSpeed;
+                break;
+            case 'ArrowRight':
+            case 'd':
+                offsetX += moveSpeed;
+                break;
+        }
+        Render.lookAt(render, {
+            min: { x: offsetX, y: offsetY },
+            max: { x: window.innerWidth + offsetX, y: window.innerHeight + offsetY }
+        });
+    });
 }
 
 // Function to add procedural equations to the background
@@ -80,7 +109,7 @@ function addEquations() {
     const container = document.createElement('div');
     container.className = 'equations';
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 20; i++) {  // Reduced the number of equations to 20
         const eq = document.createElement('div');
         eq.style.position = 'absolute';
         eq.style.top = `${Math.random() * 100}%`;
