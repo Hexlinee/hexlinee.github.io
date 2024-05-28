@@ -1,16 +1,13 @@
 // Matter.js module aliases
-let Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint;
-
-// Function to initialize Matter.js components and simulation
-function initMatterJs() {
-    Engine = Matter.Engine;
-    Render = Matter.Render;
-    Runner = Matter.Runner;
-    Bodies = Matter.Bodies;
-    Composite = Matter.Composite;
-    Mouse = Matter.Mouse;
+let Engine = Matter.Engine,
+    Render = Matter.Render,
+    Runner = Matter.Runner,
+    Bodies = Matter.Bodies,
+    Composite = Matter.Composite,
+    Mouse = Matter.Mouse,
     MouseConstraint = Matter.MouseConstraint;
 
+function initMatterJs() {
     // create an engine
     const engine = Engine.create();
     const world = engine.world;
@@ -65,8 +62,8 @@ function initMatterJs() {
         Matter.Body.setPosition(ground, { x: window.innerWidth / 2, y: window.innerHeight - 10 });
     });
 
-    // Add procedural equations to the background
-    addEquations();
+    // Add stars to the background
+    addStars();
 
     // Add keyboard controls for moving the view
     let offsetX = 0, offsetY = 0;
@@ -96,27 +93,6 @@ function initMatterJs() {
             max: { x: window.innerWidth + offsetX, y: window.innerHeight + offsetY }
         });
     });
-}
-
-// Function to add procedural equations to the background
-function addEquations() {
-    const equations = [
-        'E = mc^2', 'F = ma', 'a^2 + b^2 = c^2', 'V = IR', 'pV = nRT',
-        'F = G(m1m2)/r^2', 'E = hf', 'λ = h/p', 'p = mv', 'W = Fd'
-    ];
-    const container = document.createElement('div');
-    container.className = 'equations';
-
-    for (let i = 0; i < 20; i++) {  // Reduced the number of equations to 20
-        const eq = document.createElement('div');
-        eq.style.position = 'absolute';
-        eq.style.top = `${Math.random() * 100}%`;
-        eq.style.left = `${Math.random() * 100}%`;
-        eq.innerText = equations[Math.floor(Math.random() * equations.length)];
-        container.appendChild(eq);
-    }
-
-    document.body.appendChild(container);
 }
 
 // Function to generate random color
@@ -153,16 +129,3 @@ function loadScript(src, callback) {
 document.addEventListener('DOMContentLoaded', () => {
     loadScript('https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js', initMatterJs);
 });
-
-// Add CSS for stars
-const starStyle = document.createElement('style');
-starStyle.innerHTML = `
-    .star {
-        position: absolute;
-        width: 2px;
-        height: 2px;
-        background: white;
-        border-radius: 50%;
-    }
-`;
-document.head.appendChild(starStyle);
