@@ -28,8 +28,8 @@ body {
     font-size: 24px;
     text-shadow: 0 0 10px #00f, 0 0 20px #00f, 0 0 30px #00f;
     z-index: 1;
-    user-select: none; /* Make text non-interactable */
-    pointer-events: none; /* Make text non-interactable */
+    user-select: none; /* Prevent text selection */
+    pointer-events: none; /* Prevent interaction with the text */
 }
 
 .grid {
@@ -53,5 +53,5 @@ body {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.1);
     z-index: 0;
-    pointer-events: none;
+    pointer-events: none; /* Prevent interaction with the equations */
 }
