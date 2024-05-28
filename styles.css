@@ -58,4 +58,11 @@ body {
     height: 2px;
     background: white;
     border-radius: 50%;
+    animation: flicker 1.5s infinite;
+    opacity: 0.8;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 0.4; }
 }
