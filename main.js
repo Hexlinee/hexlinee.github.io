@@ -148,7 +148,7 @@ function createStarPattern() {
         const y = Math.random() * 100;
         pattern += `${x}% ${y}%, `;
     }
-    return `radial-gradient(circle, white 2%, transparent 2%) repeat, ${pattern.slice(0, -2)}`;
+    return `radial-gradient(circle, white 1px, transparent 1px) repeat, ${pattern.slice(0, -2)}`;
 }
 
 // Ensure Matter.js is loaded before initializing the simulation
