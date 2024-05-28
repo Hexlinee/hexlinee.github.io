@@ -1,5 +1,3 @@
-// main.js
-
 // Matter.js module aliases
 let Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint;
 
@@ -25,7 +23,7 @@ function initMatterJs() {
         options: {
             width: window.innerWidth,
             height: window.innerHeight,
-            background: '#333436',
+            background: '#000',  // Darker background
             wireframes: false,
         }
     });
@@ -38,7 +36,7 @@ function initMatterJs() {
     const boxes = [];
     for (let i = 0; i < 5; i++) {
         boxes.push(Bodies.rectangle(400 + i * 80, 200, 60, 60, { 
-            render: { fillStyle: '#00f' }
+            render: { fillStyle: getRandomColor() }  // Random color for each block
         }));
     }
     Composite.add(world, boxes);
@@ -90,51 +88,4 @@ function initMatterJs() {
                 break;
             case 'ArrowRight':
             case 'd':
-                offsetX += moveSpeed;
-                break;
-        }
-        Render.lookAt(render, {
-            min: { x: offsetX, y: offsetY },
-            max: { x: window.innerWidth + offsetX, y: window.innerHeight + offsetY }
-        });
-    });
-}
-
-// Function to add procedural equations to the background
-function addEquations() {
-    const equations = [
-        'E = mc^2', 'F = ma', 'a^2 + b^2 = c^2', 'V = IR', 'pV = nRT',
-        'F = G(m1m2)/r^2', 'E = hf', 'λ = h/p', 'p = mv', 'W = Fd'
-    ];
-    const container = document.createElement('div');
-    container.className = 'equations';
-
-    for (let i = 0; i < 20; i++) {  // Reduced the number of equations to 20
-        const eq = document.createElement('div');
-        eq.style.position = 'absolute';
-        eq.style.top = `${Math.random() * 100}%`;
-        eq.style.left = `${Math.random() * 100}%`;
-        eq.innerText = equations[Math.floor(Math.random() * equations.length)];
-        container.appendChild(eq);
-    }
-
-    document.body.appendChild(container);
-}
-
-// Ensure Matter.js is loaded before initializing the simulation
-function loadScript(src, callback) {
-    const script = document.createElement('script');
-    script.src = src;
-    script.onload = callback;
-    document.head.appendChild(script);
-}
-
-// Load Matter.js from CDN and initialize the simulation
-document.addEventListener('DOMContentLoaded', () => {
-    loadScript('https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js', initMatterJs);
-
-    // Add grid background
-    const grid = document.createElement('div');
-    grid.className = 'grid';
-    document.body.appendChild(grid);
-});
+               
