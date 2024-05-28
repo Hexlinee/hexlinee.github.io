@@ -1,184 +1,72 @@
-setTimeout(function () {
-console.log("Waiting for website to load...")
-}, 10);
+// main.js
 
-function randomIntFromInterval(min, max) { // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min)
+// Basic setup for Three.js
+let scene, camera, renderer;
+function init() {
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Lighting
+    const light = new THREE.PointLight(0xFFFFFF, 1, 0);
+    light.position.set(0, 0, 0);
+    scene.add(light);
+
+    // Creating the sun
+    const sunGeometry = new THREE.SphereGeometry(5, 32, 32);
+    const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
+    const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+    scene.add(sun);
+
+    // Create planets
+    const planetsData = [
+        { size: 0.5, color: 0xAAAAFF, distance: 10 },
+        { size: 1, color: 0xFF5533, distance: 15 },
+        { size: 0.8, color: 0x33FF55, distance: 20 },
+        { size: 0.6, color: 0xFFAA33, distance: 25 }
+    ];
+
+    planetsData.forEach((planetData, index) => {
+        const planetGeometry = new THREE.SphereGeometry(planetData.size, 32, 32);
+        const planetMaterial = new THREE.MeshBasicMaterial({ color: planetData.color });
+        const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+
+        planet.position.x = planetData.distance;
+        planet.userData = { distance: planetData.distance, angle: 0 };
+        scene.add(planet);
+
+        // Animate the planets
+        function animatePlanet() {
+            planet.userData.angle += 0.01;
+            planet.position.x = Math.cos(planet.userData.angle) * planet.userData.distance;
+            planet.position.z = Math.sin(planet.userData.angle) * planet.userData.distance;
+            requestAnimationFrame(animatePlanet);
+        }
+        animatePlanet();
+    });
+
+    // Camera positioning
+    camera.position.z = 50;
+
+    // Render loop
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
+    animate();
 }
 
-function checkBox(colNumber, RowNumber, Rows)
-{
-    const valid = [];
-    if (!RowNumber)
-    {
-        return valid;
-    }
+// Resize handler
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
-    let startCol = Math.floor(colNumber / 3) * 3;
-    let endCol = startCol + 3;
-
-    let startRow = Math.floor(RowNumber / 3) * 3;
-    let endRow = Math.min(startRow + 3, Rows.length);
-
-    for (let i = startCol; i < endCol; ++i)
-    {
-        for (let j = startRow; j < endRow; ++j)
-        {
-            const item = Rows[j][i];
-            if (item !== undefined)
-            {
-                valid.push(item);
-            }
-        }
-    }
-
-    return valid;
-}
-
-const checkColumn = (colNumber, Rows) =>
-{
-    const col = [];
-    for (let i = 0; i < Rows.length; ++i)
-    {
-        const Row = Rows[i];
-        col.push(Row[colNumber]);
-    }
-    return col;
-};
-
-
-
-
-const genRow = (Rows) =>
-{
-    const Row = [];
-    let selectables = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    for (let i = 0; i < 9; ++i)
-    {
-        const column = checkColumn(i, Rows);
-
-        let allowed;
-
-        // Remove column items
-        allowed = isValid(column, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
-
-        // Remove Row items
-        allowed = isValid(Row, allowed);
-
-        // remove Box items
-        const Box = checkBox(i, Rows.length, Rows);
-        allowed = isValid(Box, allowed);
-
-        const random = allowed.length > 1 ? Math.floor(Math.random() * allowed.length) : 0;
-
-        const chosen = allowed[random];
-        if (chosen === undefined)
-        {
-            return false;
-        }
-        Row.push(chosen);
-
-        selectables.splice(selectables.indexOf(chosen), 1);
-    }
-
-    return Row;
-};
-
-const genSudoku = () =>
-{
-    let iterations;
-    do
-    {
-        const grid = [];
-        iterations = 0;
-        do
-        {
-            ++iterations;
-            if (iterations > 500)
-            {
-                iterations = -1;
-                // Invalid
-                break;
-            }
-
-            const Row = genRow(grid);
-            if (!Row)
-            {
-                continue;
-            }
-            grid.push(Row);
-
-
-        } while (grid.length < 9);
-
-        if (iterations !== -1)
-        {
-            return grid;
-        }
-
-    } while (true);
-
-};
-
-const isValid = (column, picks) =>
-{
-    const choosable = [];
-    for (let i = 0; i < picks.length; ++i)
-    {
-        const pick = picks[i];
-        if (!column.includes(pick))
-        {
-            choosable.push(pick);
-        }
-    }
-    return choosable;
-};
-
-var CellContainer = document.getElementById('cell-container')
-const sudoku = genSudoku()
-
-let added = 0
-
-for (var i = 1; i < 82; i++) {
-  var Grid = document.createElement('div')
-  var Label = document.createElement('Label')
-
-  for (let j = 0; j < 9; ++j) {
-    const Row = sudoku[j]
-    for (let n = 0; n < 9; ++n) {
-         const number = Row[n]
-         if (i == (j*9)+(n+1)) {
-           Label.setAttribute('num', number)
-         }
-   }
-  }
-
-  if (randomIntFromInterval(0,54-added) <= (54-added)/2 && added <= 54) {
-    added += 1
-    Label.innerHTML = Label.getAttribute('num')
-  }
-
-  Label.setAttribute('id',"content")
-
-  Grid.append(Label)
-
-  Grid.setAttribute('class', 'grid')
-  Grid.setAttribute('id', i)
-
-  switch (i) {
-    case 1:
-    Grid.style.borderTopLeftRadius = '5px'
-    break;
-    case 9:
-    Grid.style.borderTopRightRadius = '5px'
-    break;
-    case 73:
-    Grid.style.borderBottomLeftRadius = '5px'
-    break;
-    case 81:
-    Grid.style.borderBottomRightRadius = '5px'
-    break;
-  }
-
-  CellContainer.append(Grid)
-}
+// Import Three.js from CDN
+const script = document.createElement('script');
+script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+script.onload = init;
+document.head.appendChild(script);
