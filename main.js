@@ -66,6 +66,30 @@ function initMatterJs() {
         render.canvas.height = window.innerHeight;
         Matter.Body.setPosition(ground, { x: window.innerWidth / 2, y: window.innerHeight - 10 });
     });
+
+    // Add procedural equations to the background
+    addEquations();
+}
+
+// Function to add procedural equations to the background
+function addEquations() {
+    const equations = [
+        'E = mc^2', 'F = ma', 'a^2 + b^2 = c^2', 'V = IR', 'pV = nRT',
+        'F = G(m1m2)/r^2', 'E = hf', 'λ = h/p', 'p = mv', 'W = Fd'
+    ];
+    const container = document.createElement('div');
+    container.className = 'equations';
+
+    for (let i = 0; i < 50; i++) {
+        const eq = document.createElement('div');
+        eq.style.position = 'absolute';
+        eq.style.top = `${Math.random() * 100}%`;
+        eq.style.left = `${Math.random() * 100}%`;
+        eq.innerText = equations[Math.floor(Math.random() * equations.length)];
+        container.appendChild(eq);
+    }
+
+    document.body.appendChild(container);
 }
 
 // Ensure Matter.js is loaded before initializing the simulation
@@ -79,4 +103,9 @@ function loadScript(src, callback) {
 // Load Matter.js from CDN and initialize the simulation
 document.addEventListener('DOMContentLoaded', () => {
     loadScript('https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js', initMatterJs);
+
+    // Add grid background
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    document.body.appendChild(grid);
 });
