@@ -65,7 +65,7 @@ function initMatterJs() {
         Matter.Body.setPosition(ground, { x: window.innerWidth / 2, y: window.innerHeight - 10 });
     });
 
-    // Add procedural equations to the background.
+    // Add procedural flickering lights to the background.
     addEquations();
 
     // Add keyboard controls for moving the view
@@ -95,13 +95,10 @@ function initMatterJs() {
             min: { x: offsetX, y: offsetY },
             max: { x: window.innerWidth + offsetX, y: window.innerHeight + offsetY }
         });
-
-        // Generate new blocks and stars along the way
-        //generateNewBlocksAndStars(offsetX, offsetY, world);
     });
 }
 
-// Function to add procedural equations to the background
+// Function to add procedural flickering lights to the background
 function addEquations() {
     const container = document.createElement('div');
     container.className = 'flickering-lights';
@@ -144,31 +141,6 @@ function getRandomColor() {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
-}
-
-// Function to generate new blocks and stars
-function generateNewBlocksAndStars(offsetX, offsetY, world) {
-    for (let i = 0; i < 5; i++) {
-        const x = offsetX + Math.random() * window.innerWidth;
-        const y = offsetY + Math.random() * window.innerHeight;
-        const box = Bodies.rectangle(x, y, 60, 60, { 
-            render: { fillStyle: getRandomColor() }
-        });
-        Composite.add(world, box);
-    }
-
-    // Generate new stars
-    addStars();
-}
-
-// Function to add stars to the background
-function addStars() {
-    const stars = document.querySelector('.stars');
-    if (!stars) {
-        const starContainer = document.createElement('div');
-        starContainer.className = 'stars';
-        document.body.appendChild(starContainer);
-    }
 }
 
 // Ensure Matter.js is loaded before initializing the simulation
