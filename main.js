@@ -65,7 +65,7 @@ function initMatterJs() {
         Matter.Body.setPosition(ground, { x: window.innerWidth / 2, y: window.innerHeight - 10 });
     });
 
-    // Add procedural equations to the background
+    // Add procedural equations to the background.
     addEquations();
 
     // Add keyboard controls for moving the view
