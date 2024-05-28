@@ -97,29 +97,43 @@ function initMatterJs() {
         });
 
         // Generate new blocks and stars along the way
-        generateNewBlocksAndStars(offsetX, offsetY, world);
+        //generateNewBlocksAndStars(offsetX, offsetY, world);
     });
 }
 
 // Function to add procedural equations to the background
 function addEquations() {
-    const equations = [
-        'E = mc^2', 'F = ma', 'a^2 + b^2 = c^2', 'V = IR', 'pV = nRT',
-        'F = G(m1m2)/r^2', 'E = hf', 'λ = h/p', 'p = mv', 'W = Fd'
-    ];
     const container = document.createElement('div');
-    container.className = 'equations';
+    container.className = 'flickering-lights';
 
-    for (let i = 0; i < 20; i++) {  // Reduced the number of equations to 20
-        const eq = document.createElement('div');
-        eq.style.position = 'absolute';
-        eq.style.top = `${Math.random() * 100}%`;
-        eq.style.left = `${Math.random() * 100}%`;
-        eq.innerText = equations[Math.floor(Math.random() * equations.length)];
-        container.appendChild(eq);
+    for (let i = 0; i < 20; i++) {
+        const light = document.createElement('div');
+        light.className = 'light';
+        light.style.position = 'absolute';
+        light.style.top = `${Math.random() * 100}%`;
+        light.style.left = `${Math.random() * 100}%`;
+        container.appendChild(light);
     }
 
     document.body.appendChild(container);
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .flickering-lights .light {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: yellow;
+            opacity: 0;
+            animation: flicker 1s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
 }
 
 // Function to generate random color
