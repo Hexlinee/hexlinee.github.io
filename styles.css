@@ -17,6 +17,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 1;  // Ensure canvas is above stars
 }
 
 #text {
@@ -27,7 +28,7 @@ body {
     color: #FFFFFF;  /* Sky blue text */
     font-size: 24px;
     text-shadow: 0 0 10px #00f, 0 0 20px #00f, 0 0 30px #00f;
-    z-index: 1;
+    z-index: 2;  // Ensure text is above stars and canvas
     user-select: none; /* Prevent text selection */
     pointer-events: none; /* Prevent interaction with the text */
     -webkit-user-select: none; /* Safari */        
@@ -41,14 +42,15 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    z-index: 0;  // Ensure stars are behind everything
+    pointer-events: none;  // Prevent stars from blocking interactions
 }
 
 .flickering-stars .star {
     width: 2px;
     height: 2px;
     border-radius: 50%;
-    background-color: white;  /* Ensure stars are white */
+    background-color: white;  // Ensure stars are white
     opacity: 0.5;
     animation: flicker 2s infinite;
 }
@@ -67,5 +69,5 @@ body {
     height: 80px;
     background: radial-gradient(circle at 30% 30%, #fff, #ccc);
     border-radius: 50%;
-    z-index: 0;
+    z-index: 1;  // Ensure moon is above stars
 }
