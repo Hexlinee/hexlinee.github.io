@@ -1,3 +1,3 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('LangLeap page loaded');
+    console.log('iMaths page loaded');
 });
