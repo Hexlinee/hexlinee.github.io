@@ -1,8 +1,8 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f4f8;
+    background-color: #f7f9fc;
     color: #333;
 }
 
@@ -50,20 +50,34 @@ nav ul li a {
     color: #333;
 }
 
+.auth .signup {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 25px;
+}
+
+.auth .login {
+    padding: 10px 20px;
+    border-radius: 25px;
+}
+
 .hero {
     text-align: center;
     padding: 100px 20px;
-    background: #e0f7fa;
+    background: linear-gradient(to right, #e0f7fa, #ffffff);
 }
 
 .hero h1 {
     font-size: 36px;
     margin-bottom: 20px;
+    color: #000;
 }
 
 .hero p {
     font-size: 18px;
     margin-bottom: 40px;
+    color: #555;
 }
 
 .cta {
@@ -75,7 +89,8 @@ nav ul li a {
 .cta a {
     text-decoration: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 25px;
+    font-size: 16px;
 }
 
 .get-started {
@@ -111,11 +126,13 @@ nav ul li a {
 .feature h3 {
     margin-top: 15px;
     font-size: 20px;
+    color: #000;
 }
 
 .feature p {
     font-size: 14px;
     margin: 10px 0;
+    color: #555;
 }
 
 .feature a {
