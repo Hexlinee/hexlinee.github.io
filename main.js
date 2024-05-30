@@ -1,45 +1,39 @@
 document.addEventListener("DOMContentLoaded", () => {
     const topTeams = [
-        // Premier League
-        { name: 'Manchester City', league: 'Premier League', logo: 'https://logo-url/manchester-city.png' },
-        { name: 'Liverpool', league: 'Premier League', logo: 'https://logo-url/liverpool.png' },
-        { name: 'Chelsea', league: 'Premier League', logo: 'https://logo-url/chelsea.png' },
-        { name: 'Manchester United', league: 'Premier League', logo: 'https://logo-url/manchester-united.png' },
-        { name: 'Tottenham Hotspur', league: 'Premier League', logo: 'https://logo-url/tottenham-hotspur.png' },
+        { name: 'Manchester City', league: 'Premier League' },
+        { name: 'Liverpool', league: 'Premier League' },
+        { name: 'Chelsea', league: 'Premier League' },
+        { name: 'Manchester United', league: 'Premier League' },
+        { name: 'Tottenham Hotspur', league: 'Premier League' },
 
-        // La Liga
-        { name: 'Real Madrid', league: 'La Liga', logo: 'https://logo-url/real-madrid.png' },
-        { name: 'Barcelona', league: 'La Liga', logo: 'https://logo-url/barcelona.png' },
-        { name: 'Atletico Madrid', league: 'La Liga', logo: 'https://logo-url/atletico-madrid.png' },
-        { name: 'Sevilla', league: 'La Liga', logo: 'https://logo-url/sevilla.png' },
-        { name: 'Real Sociedad', league: 'La Liga', logo: 'https://logo-url/real-sociedad.png' },
+        { name: 'Real Madrid', league: 'La Liga' },
+        { name: 'Barcelona', league: 'La Liga' },
+        { name: 'Atletico Madrid', league: 'La Liga' },
+        { name: 'Sevilla', league: 'La Liga' },
+        { name: 'Real Sociedad', league: 'La Liga' },
 
-        // Serie A
-        { name: 'Napoli', league: 'Serie A', logo: 'https://logo-url/napoli.png' },
-        { name: 'Juventus', league: 'Serie A', logo: 'https://logo-url/juventus.png' },
-        { name: 'Inter Milan', league: 'Serie A', logo: 'https://logo-url/inter-milan.png' },
-        { name: 'AC Milan', league: 'Serie A', logo: 'https://logo-url/ac-milan.png' },
-        { name: 'AS Roma', league: 'Serie A', logo: 'https://logo-url/as-roma.png' },
+        { name: 'Napoli', league: 'Serie A' },
+        { name: 'Juventus', league: 'Serie A' },
+        { name: 'Inter Milan', league: 'Serie A' },
+        { name: 'AC Milan', league: 'Serie A' },
+        { name: 'AS Roma', league: 'Serie A' },
 
-        // Bundesliga
-        { name: 'Bayern Munich', league: 'Bundesliga', logo: 'https://logo-url/bayern-munich.png' },
-        { name: 'Borussia Dortmund', league: 'Bundesliga', logo: 'https://logo-url/borussia-dortmund.png' },
-        { name: 'RB Leipzig', league: 'Bundesliga', logo: 'https://logo-url/rb-leipzig.png' },
-        { name: 'Bayer Leverkusen', league: 'Bundesliga', logo: 'https://logo-url/bayer-leverkusen.png' },
-        { name: 'Borussia Mönchengladbach', league: 'Bundesliga', logo: 'https://logo-url/borussia-monchengladbach.png' },
+        { name: 'Bayern Munich', league: 'Bundesliga' },
+        { name: 'Borussia Dortmund', league: 'Bundesliga' },
+        { name: 'RB Leipzig', league: 'Bundesliga' },
+        { name: 'Bayer Leverkusen', league: 'Bundesliga' },
+        { name: 'Borussia Mönchengladbach', league: 'Bundesliga' },
 
-        // Ligue 1
-        { name: 'Paris Saint-Germain', league: 'Ligue 1', logo: 'https://logo-url/psg.png' },
-        { name: 'Lille', league: 'Ligue 1', logo: 'https://logo-url/lille.png' },
-        { name: 'Lyon', league: 'Ligue 1', logo: 'https://logo-url/lyon.png' },
-        { name: 'Marseille', league: 'Ligue 1', logo: 'https://logo-url/marseille.png' },
-        { name: 'Monaco', league: 'Ligue 1', logo: 'https://logo-url/monaco.png' },
+        { name: 'Paris Saint-Germain', league: 'Ligue 1' },
+        { name: 'Lille', league: 'Ligue 1' },
+        { name: 'Lyon', league: 'Ligue 1' },
+        { name: 'Marseille', league: 'Ligue 1' },
+        { name: 'Monaco', league: 'Ligue 1' },
 
-        // Turkish Super League
-        { name: 'Galatasaray', league: 'Turkish Super League', logo: 'https://logo-url/galatasaray.png' },
-        { name: 'Fenerbahçe', league: 'Turkish Super League', logo: 'https://logo-url/fenerbahce.png' },
-        { name: 'Beşiktaş', league: 'Turkish Super League', logo: 'https://logo-url/besiktas.png' },
-        { name: 'Trabzonspor', league: 'Turkish Super League', logo: 'https://logo-url/trabzonspor.png' }
+        { name: 'Galatasaray', league: 'Turkish Super League' },
+        { name: 'Fenerbahçe', league: 'Turkish Super League' },
+        { name: 'Beşiktaş', league: 'Turkish Super League' },
+        { name: 'Trabzonspor', league: 'Turkish Super League' }
     ];
 
     function getRandomTeams(num) {
@@ -56,22 +50,14 @@ document.addEventListener("DOMContentLoaded", () => {
         leftTeams.forEach(team => {
             const teamDiv = document.createElement("div");
             teamDiv.className = "team";
-            const teamImg = document.createElement("img");
-            teamImg.src = team.logo;
-            teamImg.alt = team.name;
-            teamImg.title = team.name;
-            teamDiv.appendChild(teamImg);
+            teamDiv.innerText = team.name;
             leftTeamsDiv.appendChild(teamDiv);
         });
 
         topTeams.forEach(team => {
             const teamDiv = document.createElement("div");
             teamDiv.className = "team";
-            const teamImg = document.createElement("img");
-            teamImg.src = team.logo;
-            teamImg.alt = team.name;
-            teamImg.title = team.name;
-            teamDiv.appendChild(teamImg);
+            teamDiv.innerText = team.name;
             topTeamsDiv.appendChild(teamDiv);
         });
 
@@ -86,6 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleClick(e) {
         const cell = e.target;
+        if (cell.innerText !== '') return;
+        
         const playerName = prompt(`Enter player name for ${currentPlayer}:`);
         if (!playerName) return;
 
