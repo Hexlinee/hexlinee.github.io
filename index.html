@@ -9,26 +9,30 @@
 <body>
     <div class="game-container">
         <div class="teams">
-            <h2>Random Teams</h2>
-            <div id="teams"></div>
+            <h2>Teams</h2>
+            <div id="left-teams" class="team-column"></div>
         </div>
         <div class="grid">
             <h1>Tiki-Taka-Toe</h1>
+            <div class="turn-indicator">Player 1's turn</div>
             <div class="row">
-                <div class="cell" data-cell></div>
-                <div class="cell" data-cell></div>
-                <div class="cell" data-cell></div>
+                <div class="cell" data-cell data-row="0" data-col="0"></div>
+                <div class="cell" data-cell data-row="0" data-col="1"></div>
+                <div class="cell" data-cell data-row="0" data-col="2"></div>
             </div>
             <div class="row">
-                <div class="cell" data-cell></div>
-                <div class="cell" data-cell></div>
-                <div class="cell" data-cell></div>
+                <div class="cell" data-cell data-row="1" data-col="0"></div>
+                <div class="cell" data-cell data-row="1" data-col="1"></div>
+                <div class="cell" data-cell data-row="1" data-col="2"></div>
             </div>
             <div class="row">
-                <div class="cell" data-cell></div>
-                <div class="cell" data-cell></div>
-                <div class="cell" data-cell></div>
+                <div class="cell" data-cell data-row="2" data-col="0"></div>
+                <div class="cell" data-cell data-row="2" data-col="1"></div>
+                <div class="cell" data-cell data-row="2" data-col="2"></div>
             </div>
+        </div>
+        <div class="teams">
+            <div id="top-teams" class="team-row"></div>
         </div>
     </div>
     <script src="main.js"></script>
