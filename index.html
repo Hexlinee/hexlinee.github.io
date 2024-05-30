@@ -3,63 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iMaths</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Tiki-Taka-Toe</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">iMaths</div>
-            <nav>
-                <ul>
-                    <li><a href="#">Courses</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">About us</a></li>
-                    <li><a href="#">Pricing</a></li>
-                </ul>
-            </nav>
-            <div class="auth">
-                <a href="#" class="login">Log in</a>
-                <a href="#" class="signup">Sign up</a>
-            </div>
+    <div id="game-setup">
+        <h1>Tiki-Taka-Toe Game Setup</h1>
+        <form id="game-setup-form">
+            <label for="leagues">Select Leagues:</label>
+            <select id="leagues" multiple>
+                <option value="1">Premier League</option>
+                <option value="2">La Liga</option>
+                <option value="3">Bundesliga</option>
+                <option value="4">Serie A</option>
+                <option value="5">Ligue 1</option>
+                <option value="6">Turkish Super Lig</option>
+            </select>
+            <button type="submit">Start Game</button>
+        </form>
+    </div>
+    <div id="game-container" style="display: none;">
+        <h2 id="game-info">Player 1's Turn</h2>
+        <div class="row">
+            <div class="cell" id="cell-1"></div>
+            <div class="cell" id="cell-2"></div>
+            <div class="cell" id="cell-3"></div>
         </div>
-    </header>
-    <main>
-        <section class="hero">
-            <h1>Learn a language enjoyably, and effectively!</h1>
-            <p>Master a new language effortlessly with our engaging approach!</p>
-            <div class="cta">
-                <a href="#" class="get-started">Get Started</a>
-                <a href="#" class="member">Already a member?</a>
-            </div>
-        </section>
-        <section class="features">
-            <div class="feature">
-                <img src="feature1.png" alt="Free, Enjoyable, Efficient">
-                <h3>Free. Enjoyable. Efficient.</h3>
-                <p>Gain real-world communication skills through quick, bite-sized lessons that unlock new levels as you earn points.</p>
-                <a href="#">Learn more</a>
-            </div>
-            <div class="feature">
-                <img src="feature2.png" alt="Based on scientific findings">
-                <h3>Based on scientific findings</h3>
-                <p>We merge proven methods and engaging content to craft courses that teach reading, writing, listening, and speaking effectively!</p>
-                <a href="#">Learn more</a>
-            </div>
-            <div class="feature">
-                <img src="feature3.png" alt="Stay inspired">
-                <h3>Stay inspired</h3>
-                <p>Forming a language learning habit is simple with our gamified features, enjoyable challenges, with friendly reminders.</p>
-                <a href="#">Learn more</a>
-            </div>
-            <div class="feature">
-                <img src="feature4.png" alt="Personalized learning">
-                <h3>Personalized learning</h3>
-                <p>Blending AI and language science, our lessons are personalized to support your learning journey at the ideal level and speed.</p>
-                <a href="#">Learn more</a>
-            </div>
-        </section>
-    </main>
+        <div class="row">
+            <div class="cell" id="cell-4"></div>
+            <div class="cell" id="cell-5"></div>
+            <div class="cell" id="cell-6"></div>
+        </div>
+        <div class="row">
+            <div class="cell" id="cell-7"></div>
+            <div class="cell" id="cell-8"></div>
+            <div class="cell" id="cell-9"></div>
+        </div>
+    </div>
     <script src="main.js"></script>
 </body>
 </html>
