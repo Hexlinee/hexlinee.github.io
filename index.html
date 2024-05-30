@@ -3,41 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiki-Taka-Toe</title>
+    <title>Tiki Take Toe</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="game-setup">
-        <h1>Tiki-Taka-Toe Game Setup</h1>
-        <form id="game-setup-form">
-            <label for="leagues">Select Leagues:</label>
-            <select id="leagues" multiple>
-                <option value="1">Premier League</option>
-                <option value="2">La Liga</option>
-                <option value="3">Bundesliga</option>
-                <option value="4">Serie A</option>
-                <option value="5">Ligue 1</option>
-                <option value="6">Turkish Super Lig</option>
-            </select>
-            <button type="submit">Start Game</button>
-        </form>
-    </div>
-    <div id="game-container" style="display: none;">
-        <h2 id="game-info">Player 1's Turn</h2>
-        <div class="row">
-            <div class="cell" id="cell-1"></div>
-            <div class="cell" id="cell-2"></div>
-            <div class="cell" id="cell-3"></div>
+    <div class="game-container">
+        <div class="teams">
+            <h2>Random Teams</h2>
+            <div id="teams"></div>
         </div>
-        <div class="row">
-            <div class="cell" id="cell-4"></div>
-            <div class="cell" id="cell-5"></div>
-            <div class="cell" id="cell-6"></div>
-        </div>
-        <div class="row">
-            <div class="cell" id="cell-7"></div>
-            <div class="cell" id="cell-8"></div>
-            <div class="cell" id="cell-9"></div>
+        <div class="grid">
+            <h1>Tiki-Taka-Toe</h1>
+            <div class="row">
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
+            </div>
+            <div class="row">
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
+            </div>
+            <div class="row">
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
+            </div>
         </div>
     </div>
     <script src="main.js"></script>
