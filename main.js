@@ -2,13 +2,11 @@ const canvas = document.getElementById('mainCanvas');
 const ctx = canvas.getContext('2d');
 const waveSpeed = 200; // Speed of sound in px/s
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
 let objects = [];
 let selectedObject = null;
 let mousePos = { x: 0, y: 0 };
 let hoveredPerceiver = null;
+let lastTimestamp = 0;
 
 class Wave {
     constructor(source, startTime) {
@@ -22,8 +20,8 @@ class DopplerObject {
     constructor(type) {
         this.id = Date.now();
         this.type = type;
-        this.x = canvas.width/2;
-        this.y = canvas.height/2;
+        this.x = window.innerWidth/2;
+        this.y = window.innerHeight/2;
         this.velocity = { x: 0, y: 0 };
         this.frequency = type === 'source' ? 440 : 0;
         this.waves = [];
@@ -79,10 +77,12 @@ function createControls(object) {
         <button class="delete">Delete</button>
     `;
 
-    controls.querySelector('.frequency')?.addEventListener('input', (e) => {
-        object.frequency = e.target.value;
-        e.target.nextElementSibling.textContent = `${object.frequency}Hz`;
-    });
+    if(object.type === 'source') {
+        controls.querySelector('.frequency').addEventListener('input', (e) => {
+            object.frequency = e.target.value;
+            e.target.nextElementSibling.textContent = `${object.frequency}Hz`;
+        });
+    }
 
     controls.querySelector('.speed').addEventListener('input', (e) => {
         const speed = e.target.value;
@@ -122,7 +122,6 @@ function animate(timestamp) {
     const deltaTime = (timestamp - lastTimestamp) / 1000;
     lastTimestamp = timestamp;
 
-    // Update objects and waves
     objects.forEach(obj => {
         obj.update(deltaTime);
         obj.waves.forEach(wave => {
@@ -202,5 +201,5 @@ document.getElementById('addPerceiver').addEventListener('click', () => {
     createControls(perceiver);
 });
 
-let lastTimestamp = 0;
+// Start animation
 requestAnimationFrame(animate);
