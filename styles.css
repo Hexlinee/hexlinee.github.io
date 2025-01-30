@@ -1,9 +1,8 @@
 body {
     margin: 0;
     overflow: hidden;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: #0a0a0a;
-    color: #ffffff;
+    font-family: Arial, sans-serif;
+    background: #111;
 }
 
 canvas {
@@ -14,52 +13,36 @@ canvas {
         linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
     background-size: 40px 40px;
-    cursor: crosshair;
 }
 
 .controls {
     position: fixed;
     left: 20px;
     top: 20px;
-    background: rgba(20, 20, 20, 0.95);
+    background: rgba(0, 0, 0, 0.8);
     padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
     z-index: 1000;
-    user-select: none;
-    backdrop-filter: blur(5px);
-    min-width: 300px;
 }
 
 button {
     margin: 5px;
     padding: 8px 15px;
-    background: rgba(40, 40, 40, 0.9);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
+    background: #222;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 4px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 14px;
+}
+
+button:hover {
+    background: #333;
 }
 
 .object-control {
-    margin: 15px 0;
-    padding: 15px;
-    background: rgba(30, 30, 30, 0.9);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.slider-container {
-    margin: 12px 0;
-}
-
-.color-indicator {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin: 10px 0;
+    padding: 10px;
+    background: #1a1a1a;
+    border-radius: 6px;
 }
