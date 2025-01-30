@@ -11,6 +11,18 @@
         <div id="objectControls"></div>
     </div>
     <canvas id="mainCanvas"></canvas>
+    <script>
+        // Handle canvas resizing
+        window.addEventListener('load', () => {
+            const canvas = document.getElementById('mainCanvas');
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+        });
+    </script>
     <script src="main.js"></script>
 </body>
 </html>
