@@ -1,3 +1,4 @@
+/* styles.css */
 body {
     margin: 0;
     overflow: hidden;
@@ -19,11 +20,12 @@ canvas {
     position: fixed;
     left: 20px;
     top: 20px;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     padding: 15px;
     border-radius: 8px;
     color: white;
     z-index: 1000;
+    min-width: 300px;
 }
 
 button {
@@ -42,7 +44,25 @@ button:hover {
 
 .object-control {
     margin: 10px 0;
-    padding: 10px;
+    padding: 15px;
     background: #1a1a1a;
     border-radius: 6px;
+    border: 1px solid #333;
+}
+
+.slider-container {
+    margin: 10px 0;
+}
+
+.slider-container label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.frequency-display {
+    position: absolute;
+    background: rgba(0,0,0,0.8);
+    padding: 8px;
+    border-radius: 4px;
+    pointer-events: none;
 }
