@@ -1,15 +1,14 @@
 const canvas = document.getElementById('mainCanvas');
 const ctx = canvas.getContext('2d');
 const WAVE_SPEED = 200;
-const GRID_SIZE = 50;
-const DARK_GRID_COLOR = 'rgba(255, 255, 255, 0.1)';
+const GRID_SIZE = 40;
 
 let objects = [];
 let selectedObject = null;
 let hoveredPerceiver = null;
-let lastTimestamp = 0;
+let lastTimestamp = performance.now();
 let isDraggingControls = false;
-let controlsStartPos = { x: 20, y: 20 };
+let controlsStartPos = { x: 0, y: 0 };
 
 // Initialize canvas
 function resizeCanvas() {
@@ -20,10 +19,9 @@ window.addEventListener('load', resizeCanvas);
 window.addEventListener('resize', resizeCanvas);
 
 class Wave {
-    constructor(source, startTime) {
+    constructor(source) {
         this.source = source;
-        this.startTime = startTime;
-        this.radius = 0;
+        this.createdAt = performance.now();
     }
 }
 
@@ -31,19 +29,18 @@ class DopplerObject {
     constructor(type) {
         this.id = Date.now();
         this.type = type;
-        this.x = canvas.width / 2;
-        this.y = canvas.height / 2;
+        this.x = canvas.width/2;
+        this.y = canvas.height/2;
         this.velocity = { x: 0, y: 0 };
         this.acceleration = { x: 0, y: 0 };
         this.frequency = type === 'source' ? 1 : 0;
         this.waves = [];
-        this.baseColor = type === 'source' ? [255, 85, 85] : [85, 170, 255];
+        this.baseHue = type === 'source' ? 0 : 200;
         this.radius = 16;
-        this.lastWaveTime = 0;
     }
 
     update(deltaTime) {
-        // Update velocity with acceleration
+        // Apply acceleration
         this.velocity.x += this.acceleration.x * deltaTime;
         this.velocity.y += this.acceleration.y * deltaTime;
         
@@ -51,34 +48,34 @@ class DopplerObject {
         this.x += this.velocity.x * deltaTime;
         this.y += this.velocity.y * deltaTime;
         
+        // Generate waves
         if(this.type === 'source' && this.frequency > 0) {
             const waveInterval = 1000 / this.frequency;
-            if(Date.now() - this.lastWaveTime > waveInterval) {
-                this.waves.push(new Wave(this, Date.now()));
-                this.lastWaveTime = Date.now();
+            if(performance.now() - (this.waves[0]?.createdAt || 0) > waveInterval) {
+                this.waves.push(new Wave(this));
             }
         }
     }
 
     getColor() {
-        // Color changes based on speed magnitude
-        const speed = Math.hypot(this.velocity.x, this.velocity.y);
-        const [r, g, b] = this.baseColor;
-        const intensity = Math.min(0.5 + speed/400, 1);
-        return `rgba(${r}, ${g}, ${b}, ${intensity})`;
+        const speed = Math.min(Math.hypot(this.velocity.x, this.velocity.y), 200);
+        const saturation = 80 + (speed / 200 * 20);
+        const lightness = 50 - (speed / 200 * 10);
+        return `hsl(${this.baseHue}, ${saturation}%, ${lightness}%)`;
     }
 
     draw() {
+        // Draw object
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = this.getColor();
         ctx.fill();
 
-        // Velocity vector
+        // Draw velocity vector
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.x + this.velocity.x * 25, this.y + this.velocity.y * 25);
-        ctx.strokeStyle = '#ffffff';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
         ctx.lineWidth = 2;
         ctx.stroke();
     }
@@ -88,14 +85,14 @@ function createControls(object) {
     const controls = document.createElement('div');
     controls.className = 'object-control';
     controls.innerHTML = `
-        <h4>${object.type.charAt(0).toUpperCase() + object.type.slice(1)} #${object.id}
+        <h4>${object.type.toUpperCase()} #${object.id}
             <div class="color-indicator" style="background: ${object.getColor()}"></div>
         </h4>
         ${object.type === 'source' ? `
             <div class="slider-container">
                 <label>Frequency (1-5Hz):</label>
                 <input type="range" min="1" max="5" value="${object.frequency}" class="frequency">
-                <span class="frequency-value">${object.frequency}Hz</span>
+                <span>${object.frequency}Hz</span>
             </div>
         ` : ''}
         <div class="slider-container">
@@ -108,49 +105,44 @@ function createControls(object) {
         </div>
         <div class="slider-container">
             <label>Speed (0-200px/s):</label>
-            <input type="range" min="0" max="200" 
-                   value="${Math.hypot(object.velocity.x, object.velocity.y).toFixed(0)}" 
-                   class="speed">
-        </div>
-        <div class="slider-container">
-            <label>Direction:</label>
-            <input type="range" min="0" max="360" 
-                   value="${(Math.atan2(object.velocity.y, object.velocity.x) * 180/Math.PI).toFixed(0)}" 
-                   class="direction">
+            <input type="range" min="0" max="200" value="${Math.hypot(object.velocity.x, object.velocity.y).toFixed(0)}" class="speed">
         </div>
         <button class="delete">🗑️ Delete</button>
     `;
 
-    // Acceleration controls
-    controls.querySelector('.accel-x').addEventListener('input', (e) => {
-        object.acceleration.x = parseFloat(e.target.value);
-        controls.querySelector('.color-indicator').style.background = object.getColor();
-    });
-    
-    controls.querySelector('.accel-y').addEventListener('input', (e) => {
-        object.acceleration.y = parseFloat(e.target.value);
-        controls.querySelector('.color-indicator').style.background = object.getColor();
-    });
-
-    // Existing controls with color updates
-    if(object.type === 'source') {
-        controls.querySelector('.frequency').addEventListener('input', (e) => {
-            object.frequency = parseInt(e.target.value);
-            e.target.nextElementSibling.textContent = `${object.frequency}Hz`;
-            controls.querySelector('.color-indicator').style.background = object.getColor();
-        });
-    }
-
-    const updateVelocity = () => {
-        const speed = parseFloat(controls.querySelector('.speed').value);
-        const angle = parseFloat(controls.querySelector('.direction').value) * Math.PI/180;
-        object.velocity.x = speed * Math.cos(angle);
-        object.velocity.y = speed * Math.sin(angle);
+    const updateColor = () => {
         controls.querySelector('.color-indicator').style.background = object.getColor();
     };
 
-    controls.querySelector('.speed').addEventListener('input', updateVelocity);
-    controls.querySelector('.direction').addEventListener('input', updateVelocity);
+    // Acceleration controls
+    controls.querySelector('.accel-x').addEventListener('input', e => {
+        object.acceleration.x = Number(e.target.value);
+        updateColor();
+    });
+    controls.querySelector('.accel-y').addEventListener('input', e => {
+        object.acceleration.y = Number(e.target.value);
+        updateColor();
+    });
+
+    // Frequency control
+    if(object.type === 'source') {
+        controls.querySelector('.frequency').addEventListener('input', e => {
+            object.frequency = Number(e.target.value);
+            e.target.nextElementSibling.textContent = `${object.frequency}Hz`;
+            updateColor();
+        });
+    }
+
+    // Velocity controls
+    controls.querySelector('.speed').addEventListener('input', e => {
+        const speed = Number(e.target.value);
+        const angle = Math.atan2(object.velocity.y, object.velocity.x);
+        object.velocity.x = speed * Math.cos(angle);
+        object.velocity.y = speed * Math.sin(angle);
+        updateColor();
+    });
+
+    // Delete button
     controls.querySelector('.delete').addEventListener('click', () => {
         objects = objects.filter(o => o.id !== object.id);
         controls.remove();
@@ -159,87 +151,77 @@ function createControls(object) {
     document.getElementById('objectControls').appendChild(controls);
 }
 
-// Improved frequency display with angled text placement
-function drawAngledText(text, x, y, angle) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-    ctx.fillText(text, 10, 5);
-    ctx.restore();
-}
-
 function calculatePerceivedFrequency(source, perceiver) {
-    const toObserver = { x: perceiver.x - source.x, y: perceiver.y - source.y };
-    const distance = Math.hypot(toObserver.x, toObserver.y);
+    const relativePos = { x: perceiver.x - source.x, y: perceiver.y - source.y };
+    const distance = Math.hypot(relativePos.x, relativePos.y);
     if(distance === 0) return source.frequency;
     
-    const direction = { x: toObserver.x/distance, y: toObserver.y/distance };
-    const vs = source.velocity.x * direction.x + source.velocity.y * direction.y;
-    const vo = perceiver.velocity.x * direction.x + perceiver.velocity.y * direction.y;
+    const direction = { x: relativePos.x/distance, y: relativePos.y/distance };
+    const sourceSpeed = source.velocity.x * direction.x + source.velocity.y * direction.y;
+    const perceiverSpeed = perceiver.velocity.x * direction.x + perceiver.velocity.y * direction.y;
     
-    return source.frequency * (WAVE_SPEED + vo) / (WAVE_SPEED + vs);
+    return source.frequency * (WAVE_SPEED + perceiverSpeed) / (WAVE_SPEED + sourceSpeed);
 }
 
-// Rest of the code remains similar until animate function:
-
 function animate(timestamp) {
-    ctx.fillStyle = '#121212';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawGrid();
-    
     const deltaTime = (timestamp - lastTimestamp) / 1000;
     lastTimestamp = timestamp;
 
+    // Clear canvas
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Update and draw objects
     objects.forEach(obj => {
         obj.update(deltaTime);
-        obj.waves.forEach(wave => {
-            wave.radius = (Date.now() - wave.startTime) * (WAVE_SPEED / 1000);
-        });
-        obj.waves = obj.waves.filter(wave => wave.radius < Math.max(canvas.width, canvas.height));
-    });
-
-    // Draw waves
-    objects.forEach(obj => {
+        
+        // Draw waves
         if(obj.type === 'source') {
             obj.waves.forEach(wave => {
+                const age = (timestamp - wave.createdAt) / 1000;
+                const radius = age * WAVE_SPEED;
                 ctx.beginPath();
-                ctx.arc(wave.source.x, wave.source.y, wave.radius, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(255, 80, 80, ${1 - wave.radius/1000})`;
+                ctx.arc(wave.source.x, wave.source.y, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `hsla(0, 80%, 50%, ${1 - radius/1000})`;
                 ctx.stroke();
             });
+            obj.waves = obj.waves.filter(wave => 
+                (timestamp - wave.createdAt) / 1000 * WAVE_SPEED < Math.max(canvas.width, canvas.height)
+            );
         }
+        
+        obj.draw();
     });
 
-    // Draw objects
-    objects.forEach(obj => obj.draw());
-
-    // Improved frequency display
+    // Draw frequency indicators
     if(hoveredPerceiver) {
         const sources = objects.filter(o => o.type === 'source');
+        const angleStep = (Math.PI * 2) / sources.length;
+        
         sources.forEach((source, index) => {
+            const angle = angleStep * index;
             const perceivedFreq = calculatePerceivedFrequency(source, hoveredPerceiver);
-            const angle = (index * Math.PI*2)/sources.length; // Radial distribution
+            const text = `${perceivedFreq.toFixed(1)}Hz`;
             
             ctx.save();
             ctx.translate(hoveredPerceiver.x, hoveredPerceiver.y);
             ctx.rotate(angle);
             
-            ctx.fillStyle = '#fff';
-            ctx.font = '12px Arial';
-            ctx.fillText(`${perceivedFreq.toFixed(1)}Hz`, 20, 5);
-            
+            // Draw line
             ctx.beginPath();
             ctx.moveTo(0, 0);
-            ctx.lineTo(50, 0);
+            ctx.lineTo(60, 0);
             ctx.strokeStyle = source.getColor();
             ctx.lineWidth = 2;
             ctx.stroke();
+            
+            // Draw text
+            ctx.fillStyle = '#fff';
+            ctx.font = '14px Arial';
+            ctx.fillText(text, 65, 5);
             
             ctx.restore();
         });
     }
 
     requestAnimationFrame(animate);
-}
-
-// Rest of the event listeners remain unchanged
