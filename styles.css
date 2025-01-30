@@ -61,3 +61,29 @@ canvas {
     left: 0;
     cursor: crosshair;
 }
+/* Previous styles remain the same, add these new rules */
+
+.object-control h4 {
+    margin: 0 0 10px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #404040;
+}
+
+.color-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.frequency-display {
+    position: absolute;
+    background: rgba(32, 32, 32, 0.9);
+    padding: 8px 12px;
+    border-radius: 4px;
+    pointer-events: none;
+    white-space: nowrap;
+    border: 1px solid #404040;
+}
