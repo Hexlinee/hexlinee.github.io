@@ -1,4 +1,3 @@
-/* Base styles */
 body {
     margin: 0;
     overflow: hidden;
@@ -7,7 +6,6 @@ body {
     color: #ffffff;
 }
 
-/* Grid background */
 canvas {
     position: fixed;
     top: 0;
@@ -19,7 +17,6 @@ canvas {
     cursor: crosshair;
 }
 
-/* Control panel */
 .controls {
     position: fixed;
     left: 20px;
@@ -30,13 +27,11 @@ canvas {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 1000;
-    cursor: move;
     user-select: none;
     backdrop-filter: blur(5px);
     min-width: 300px;
 }
 
-/* Buttons */
 button {
     margin: 5px;
     padding: 8px 15px;
@@ -49,12 +44,6 @@ button {
     font-size: 14px;
 }
 
-button:hover {
-    background: rgba(60, 60, 60, 0.9);
-    transform: translateY(-1px);
-}
-
-/* Object controls */
 .object-control {
     margin: 15px 0;
     padding: 15px;
@@ -63,78 +52,14 @@ button:hover {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.object-control h4 {
-    margin: 0 0 12px 0;
-    color: #fff;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Sliders */
 .slider-container {
     margin: 12px 0;
 }
 
-input[type="range"] {
-    width: 100%;
-    height: 4px;
-    background: rgba(100, 100, 100, 0.3);
-    border-radius: 2px;
-    outline: none;
-    -webkit-appearance: none;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px;
-    height: 14px;
-    background: #fff;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-input[type="range"]:hover::-webkit-slider-thumb {
-    background: #888;
-}
-
-/* Color indicators */
 .color-indicator {
     width: 18px;
     height: 18px;
     border-radius: 50%;
     border: 2px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* Frequency display */
-.frequency-display {
-    position: absolute;
-    background: rgba(20, 20, 20, 0.9);
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    pointer-events: none;
-    backdrop-filter: blur(2px);
-    transform: translate(20px, -50%);
-    white-space: nowrap;
-    z-index: 2000;
-}
-
-/* Velocity vectors */
-.velocity-vector {
-    stroke-width: 2;
-    stroke: rgba(255, 255, 255, 0.7);
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .controls {
-        width: 90%;
-        left: 5%;
-        top: 10px;
-    }
 }
