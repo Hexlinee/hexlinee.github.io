@@ -11,7 +11,6 @@ let lastTimestamp = 0;
 let isDraggingControls = false;
 let controlsStartPos = { x: 20, y: 20 };
 
-// Initialize canvas
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -55,13 +54,11 @@ class DopplerObject {
     }
 
     draw() {
-        // Main object
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
         ctx.fill();
 
-        // Velocity vector
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.x + this.velocity.x * 25, this.y + this.velocity.y * 25);
@@ -140,7 +137,6 @@ function drawGrid() {
     ctx.strokeStyle = DARK_GRID_COLOR;
     ctx.lineWidth = 1;
     
-    // Vertical lines
     for(let x = 0; x < canvas.width; x += GRID_SIZE) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
@@ -148,7 +144,6 @@ function drawGrid() {
         ctx.stroke();
     }
     
-    // Horizontal lines
     for(let y = 0; y < canvas.height; y += GRID_SIZE) {
         ctx.beginPath();
         ctx.moveTo(0, y);
@@ -161,7 +156,6 @@ function drawArrow(fromX, fromY, toX, toY, text) {
     const headLength = 12;
     const angle = Math.atan2(toY - fromY, toX - fromX);
     
-    // Arrow line
     ctx.beginPath();
     ctx.moveTo(fromX, fromY);
     ctx.lineTo(toX, toY);
@@ -169,8 +163,115 @@ function drawArrow(fromX, fromY, toX, toY, text) {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Arrowhead
     ctx.beginPath();
     ctx.moveTo(toX, toY);
     ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI/6), 
-               toY - headLength * Math.sin(
+               toY - headLength * Math.sin(angle - Math.PI/6));
+    ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI/6), 
+               toY - headLength * Math.sin(angle + Math.PI/6));
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = '14px Arial';
+    ctx.fillText(`${text.toFixed(1)}Hz`, toX + 15, toY + 5);
+}
+
+function animate(timestamp) {
+    ctx.fillStyle = '#121212';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    drawGrid();
+    
+    const deltaTime = (timestamp - lastTimestamp) / 1000;
+    lastTimestamp = timestamp;
+
+    objects.forEach(obj => {
+        obj.update(deltaTime);
+        obj.waves.forEach(wave => {
+            wave.radius = (Date.now() - wave.startTime) * (WAVE_SPEED / 1000);
+        });
+        obj.waves = obj.waves.filter(wave => wave.radius < Math.max(canvas.width, canvas.height));
+    });
+
+    objects.forEach(obj => {
+        if(obj.type === 'source') {
+            obj.waves.forEach(wave => {
+                ctx.beginPath();
+                ctx.arc(wave.source.x, wave.source.y, wave.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(255, 80, 80, ${1 - wave.radius/1000})`;
+                ctx.stroke();
+            });
+        }
+    });
+
+    objects.forEach(obj => obj.draw());
+
+    if(hoveredPerceiver) {
+        objects.filter(o => o.type === 'source').forEach(source => {
+            const perceivedFreq = calculatePerceivedFrequency(source, hoveredPerceiver);
+            drawArrow(
+                source.x, source.y,
+                hoveredPerceiver.x, hoveredPerceiver.y,
+                perceivedFreq
+            );
+        });
+    }
+
+    requestAnimationFrame(animate);
+}
+
+// Event listeners
+canvas.addEventListener('mousemove', (e) => {
+    if(isDraggingControls) {
+        const dx = e.clientX - controlsStartPos.x;
+        const dy = e.clientY - controlsStartPos.y;
+        const controls = document.querySelector('.controls');
+        controls.style.left = `${dx}px`;
+        controls.style.top = `${dy}px`;
+        return;
+    }
+
+    hoveredPerceiver = objects.find(obj => 
+        obj.type === 'perceiver' &&
+        Math.hypot(obj.x - e.clientX, obj.y - e.clientY) < obj.radius
+    );
+});
+
+document.querySelector('.controls').addEventListener('mousedown', (e) => {
+    isDraggingControls = true;
+    controlsStartPos.x = e.clientX - parseInt(document.querySelector('.controls').style.left || 20);
+    controlsStartPos.y = e.clientY - parseInt(document.querySelector('.controls').style.top || 20);
+});
+
+document.addEventListener('mouseup', () => isDraggingControls = false);
+
+canvas.addEventListener('mousedown', (e) => {
+    selectedObject = objects.find(obj => 
+        Math.hypot(obj.x - e.clientX, obj.y - e.clientY) < obj.radius
+    );
+});
+
+canvas.addEventListener('mouseup', () => selectedObject = null);
+
+canvas.addEventListener('mousemove', (e) => {
+    if(selectedObject) {
+        selectedObject.x = e.clientX;
+        selectedObject.y = e.clientY;
+    }
+});
+
+document.getElementById('addSource').addEventListener('click', () => {
+    const source = new DopplerObject('source');
+    objects.push(source);
+    createControls(source);
+});
+
+document.getElementById('addPerceiver').addEventListener('click', () => {
+    const perceiver = new DopplerObject('perceiver');
+    objects.push(perceiver);
+    createControls(perceiver);
+});
+
+// Start animation
+requestAnimationFrame(animate);
