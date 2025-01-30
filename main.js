@@ -1,4 +1,3 @@
-// main.js
 const canvas = document.getElementById('mainCanvas');
 const ctx = canvas.getContext('2d');
 const WAVE_SPEED = 200;
@@ -6,7 +5,6 @@ let objects = [];
 let selectedObject = null;
 let hoveredPerceiver = null;
 
-// Initialize canvas
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -28,11 +26,11 @@ class DopplerObject {
         this.x = canvas.width/2;
         this.y = canvas.height/2;
         this.velocity = { x: 0, y: 0 };
-        this.frequency = type === 'source' ? 2 : 0;
+        this.frequency = type === 'source' ? 1 : 0;
         this.waves = [];
         this.color = type === 'source' ? '#ff4444' : '#44aaff';
         this.radius = 15;
-        this.lastWave = 0;
+        this.lastWave = performance.now();
     }
 
     update() {
@@ -57,35 +55,42 @@ function createControls(obj) {
     const controls = document.createElement('div');
     controls.className = 'object-control';
     controls.innerHTML = `
-        <h4>${obj.type.toUpperCase()} #${obj.id}</h4>
+        <h3>${obj.type.toUpperCase()} #${obj.id}</h3>
         ${obj.type === 'source' ? `
             <div class="slider-container">
-                <label>Frequency (1-5Hz): <input type="range" min="1" max="5" 
-                    value="${obj.frequency}" class="frequency"></label>
+                <label>Frequency (Hz): 
+                    <input type="range" min="1" max="5" value="${obj.frequency}" class="frequency">
+                    <span>${obj.frequency}Hz</span>
+                </label>
             </div>
         ` : ''}
         <div class="slider-container">
-            <label>Speed X: <input type="range" min="-100" max="100" 
-                value="${obj.velocity.x}" class="velocity-x"></label>
+            <label>Speed X: 
+                <input type="range" min="-100" max="100" value="${obj.velocity.x}" class="speed-x">
+            </label>
         </div>
         <div class="slider-container">
-            <label>Speed Y: <input type="range" min="-100" max="100" 
-                value="${obj.velocity.y}" class="velocity-y"></label>
+            <label>Speed Y: 
+                <input type="range" min="-100" max="100" value="${obj.velocity.y}" class="speed-y">
+            </label>
         </div>
-        <button class="delete">Delete</button>
+        <button class="delete">🗑️ Delete</button>
     `;
 
     if(obj.type === 'source') {
-        controls.querySelector('.frequency').addEventListener('input', e => {
+        const freqInput = controls.querySelector('.frequency');
+        const freqValue = freqInput.nextElementSibling;
+        freqInput.addEventListener('input', e => {
             obj.frequency = parseInt(e.target.value);
+            freqValue.textContent = `${obj.frequency}Hz`;
         });
     }
 
-    controls.querySelector('.velocity-x').addEventListener('input', e => {
+    controls.querySelector('.speed-x').addEventListener('input', e => {
         obj.velocity.x = parseInt(e.target.value);
     });
 
-    controls.querySelector('.velocity-y').addEventListener('input', e => {
+    controls.querySelector('.speed-y').addEventListener('input', e => {
         obj.velocity.y = parseInt(e.target.value);
     });
 
@@ -97,20 +102,13 @@ function createControls(obj) {
     document.getElementById('objectControls').appendChild(controls);
 }
 
-function calculatePerceivedFrequency(source, perceiver) {
-    const relativeSpeed = (perceiver.velocity.x - source.velocity.x) / WAVE_SPEED;
-    return source.frequency * (1 + relativeSpeed);
-}
-
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Update and draw objects
     objects.forEach(obj => {
         obj.update();
         obj.draw();
         
-        // Update waves
         if(obj.type === 'source') {
             obj.waves = obj.waves.filter(wave => {
                 const radius = (performance.now() - wave.created) * (WAVE_SPEED/1000);
@@ -122,20 +120,6 @@ function animate() {
             });
         }
     });
-
-    // Draw frequency display
-    if(hoveredPerceiver) {
-        ctx.fillStyle = '#fff';
-        ctx.font = '14px Arial';
-        objects.filter(o => o.type === 'source').forEach(source => {
-            const freq = calculatePerceivedFrequency(source, hoveredPerceiver);
-            ctx.fillText(
-                `${freq.toFixed(1)}Hz`,
-                hoveredPerceiver.x + 20,
-                hoveredPerceiver.y + 20
-            );
-        });
-    }
 
     requestAnimationFrame(animate);
 }
