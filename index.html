@@ -2,16 +2,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Doppler Effect Simulator</title>
+    <title>3D Interactive World Map</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="controls">
-        <button id="addSource">➕ Source</button>
-        <button id="addPerceiver">👥 Perceiver</button>
-        <div id="objectControls"></div>
-    </div>
-    <canvas id="canvas"></canvas>
-    <script src="app.js"></script>
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.150.1/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
