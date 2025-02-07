@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Team Finder</title>
+    <title>Dark Football Finder</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-futbol"></i> Football Team Finder</h1>
+            <h1><i class="fas fa-futbol"></i> Dark Football Finder</h1>
         </header>
 
         <div class="search-section">
@@ -24,13 +24,14 @@
 
         <div id="teamInfo" class="team-info hidden">
             <div class="team-header">
-                <img id="teamLogo" src="" alt="Team Logo" class="team-logo">
-                <h2 id="teamName"></h2>
-            </div>
-            <div class="team-details">
-                <p>Founded: <span id="founded"></span></p>
-                <p>Stadium: <span id="stadium"></span></p>
-                <p>Website: <a id="website" target="_blank"></a></p>
+                <img id="teamBadge" src="" alt="Team Badge" class="team-badge">
+                <div class="team-meta">
+                    <h2 id="teamName"></h2>
+                    <div class="team-stats">
+                        <p><i class="fas fa-trophy"></i> <span id="teamTitles">0</span></p>
+                        <p><i class="fas fa-stadium"></i> <span id="teamStadium"></span></p>
+                    </div>
+                </div>
             </div>
         </div>
 
