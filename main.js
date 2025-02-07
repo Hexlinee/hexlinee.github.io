@@ -1,75 +1,141 @@
-// main.js
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GeoJsonGeometry } from 'three/addons/geometries/GeoJsonGeometry.js';
+const API_KEY = '8c2d02fd67454c968dd6b9829c5b24eb'; // Replace with your actual API key
+const BASE_URL = 'https://api.football-data.org/v4/';
 
-let scene, camera, renderer, controls;
-let earthMesh, countryBorders;
+let fuse;
+let allTeams = [];
 
-init();
-animate();
-
-function init() {
-    // Scene setup
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0x404040);
-    scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(5, 3, 5);
-    scene.add(directionalLight);
-
-    // Earth sphere
-    const geometry = new THREE.SphereGeometry(5, 64, 64);
-    const textureLoader = new THREE.TextureLoader();
-    const material = new THREE.MeshPhongMaterial({
-        map: textureLoader.load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg'),
-        bumpScale: 0.05,
-        specular: new THREE.Color('grey'),
-        shininess: 5
-    });
-    earthMesh = new THREE.Mesh(geometry, material);
-    scene.add(earthMesh);
-
-    // Country borders
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
-    const loader = new THREE.FileLoader();
-    loader.load('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson', function(data) {
-        const countries = JSON.parse(data);
-        countries.features.forEach(feature => {
-            const countryGeometry = new GeoJsonGeometry(feature, 5.1, 64);
-            const line = new THREE.Line(countryGeometry, lineMaterial);
-            scene.add(line);
+// Initialize application
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('teamSearch');
+    const searchBtn = document.getElementById('searchBtn');
+    
+    // Fetch all teams on initial load
+    fetchTeams().then(() => {
+        // Initialize fuzzy search
+        fuse = new Fuse(allTeams, {
+            keys: ['name'],
+            threshold: 0.3,
+            includeScore: true
         });
     });
 
-    // Controls
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.rotateSpeed = 0.5;
+    // Event listeners
+    searchInput.addEventListener('input', handleSearchInput);
+    searchBtn.addEventListener('click', handleSearch);
+});
 
-    // Camera position
-    camera.position.z = 15;
-
-    // Window resize handler
-    window.addEventListener('resize', onWindowResize);
+async function fetchTeams() {
+    try {
+        const response = await fetch(`${BASE_URL}teams`, {
+            headers: { 'X-Auth-Token': API_KEY }
+        });
+        const data = await response.json();
+        
+        allTeams = data.teams.map(team => ({
+            id: team.id,
+            name: team.name.toLowerCase(),
+            displayName: team.name,
+            logo: team.crest,
+            founded: team.founded,
+            stadium: team.venue,
+            website: team.website
+        }));
+    } catch (error) {
+        console.error('Error fetching teams:', error);
+        alert('Failed to load teams. Please try again later.');
+    }
 }
 
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+function handleSearchInput(e) {
+    const searchTerm = e.target.value.trim().toLowerCase();
+    const suggestions = document.getElementById('suggestions');
+    suggestions.innerHTML = '';
+
+    if (searchTerm.length === 0) return;
+
+    const results = fuse.search(searchTerm).slice(0, 5);
+    
+    results.forEach(result => {
+        const div = document.createElement('div');
+        div.className = 'suggestion-item';
+        div.textContent = result.item.displayName;
+        div.addEventListener('click', () => selectTeam(result.item));
+        suggestions.appendChild(div);
+    });
 }
 
-function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    earthMesh.rotation.y += 0.0005;
-    renderer.render(scene, camera);
+function selectTeam(team) {
+    document.getElementById('teamSearch').value = team.displayName;
+    document.getElementById('suggestions').innerHTML = '';
+    showTeamInfo(team);
+    fetchPlayers(team.id);
+}
+
+async function handleSearch() {
+    const searchTerm = document.getElementById('teamSearch').value.trim();
+    if (!searchTerm) return;
+
+    const results = fuse.search(searchTerm);
+    if (results.length === 0) {
+        alert('No team found. Please try a different search.');
+        return;
+    }
+
+    const bestMatch = results[0].item;
+    selectTeam(bestMatch);
+}
+
+function showTeamInfo(team) {
+    const teamInfo = document.getElementById('teamInfo');
+    teamInfo.classList.remove('hidden');
+
+    document.getElementById('teamName').textContent = team.displayName;
+    document.getElementById('founded').textContent = team.founded || 'Unknown';
+    document.getElementById('stadium').textContent = team.stadium || 'Unknown';
+    
+    const websiteLink = document.getElementById('website');
+    websiteLink.href = team.website || '#';
+    websiteLink.textContent = team.website ? new URL(team.website).hostname : 'Not available';
+
+    const teamLogo = document.getElementById('teamLogo');
+    teamLogo.src = team.logo || 'https://via.placeholder.com/100';
+    teamLogo.onerror = () => teamLogo.src = 'https://via.placeholder.com/100';
+}
+
+async function fetchPlayers(teamId) {
+    try {
+        const response = await fetch(`${BASE_URL}teams/${teamId}`, {
+            headers: { 'X-Auth-Token': API_KEY }
+        });
+        const data = await response.json();
+        renderPlayers(data.squad);
+    } catch (error) {
+        console.error('Error fetching players:', error);
+        alert('Failed to load players. Please try again later.');
+    }
+}
+
+function renderPlayers(players) {
+    const playersGrid = document.getElementById('players');
+    playersGrid.innerHTML = '';
+
+    if (!players || players.length === 0) {
+        playersGrid.innerHTML = '<p>No player data available</p>';
+        return;
+    }
+
+    players.forEach(player => {
+        const playerCard = document.createElement('div');
+        playerCard.className = 'player-card';
+        playerCard.innerHTML = `
+            <img src="${player.photo || 'https://via.placeholder.com/120'}" 
+                 alt="${player.name}" 
+                 class="player-image"
+                 onerror="this.src='https://via.placeholder.com/120'">
+            <h3>${player.name}</h3>
+            <p>Position: ${player.position || 'N/A'}</p>
+            <p>Nationality: ${player.nationality || 'N/A'}</p>
+        `;
+        playersGrid.appendChild(playerCard);
+    });
 }
