@@ -29,9 +29,19 @@ async function fetchTeams() {
         const response = await fetch(`${BASE_URL}teams`, {
             headers: { 'X-Auth-Token': API_KEY }
         });
-        const data = await response.json();
         
-        allTeams = data.teams.map(team => ({
+        // Handle 403 Forbidden errors
+        if (response.status === 403) {
+            throw new Error('API rate limit exceeded. Please wait and try again later.');
+        }
+        
+        // Handle other HTTP errors
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+         allTeams = data.teams.map(team => ({
             id: team.id,
             name: team.name.toLowerCase(),
             displayName: team.name,
@@ -42,7 +52,7 @@ async function fetchTeams() {
         }));
     } catch (error) {
         console.error('Error fetching teams:', error);
-        alert('Failed to load teams. Please try again later.');
+        alert(error.message || 'Failed to load teams. Please try again later.');
     }
 }
 
