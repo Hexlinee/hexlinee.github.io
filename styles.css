@@ -1,8 +1,9 @@
 :root {
-    --primary-color: #2c2c54;
-    --secondary-color: #40407a;
-    --accent-color: #706fd3;
-    --background-color: #f8f9fa;
+    --dark-bg: #0a0a0a;
+    --dark-primary: #1a1a1a;
+    --accent: #2c2c54;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
 }
 
 * {
@@ -13,8 +14,8 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--background-color);
-    color: var(--primary-color);
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
     line-height: 1.6;
 }
 
@@ -27,11 +28,10 @@ body {
 header {
     text-align: center;
     padding: 2rem;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
+    background: var(--dark-primary);
     border-radius: 10px;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .search-section {
@@ -48,38 +48,40 @@ header {
 #teamSearch {
     flex: 1;
     padding: 1rem;
-    border: 2px solid var(--accent-color);
+    border: 2px solid var(--accent);
     border-radius: 30px;
     font-size: 1.1rem;
-    transition: box-shadow 0.3s ease;
+    background: var(--dark-primary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
 }
 
 #teamSearch:focus {
     outline: none;
-    box-shadow: 0 0 8px rgba(112, 111, 211, 0.3);
+    box-shadow: 0 0 15px rgba(44, 44, 84, 0.5);
 }
 
 #searchBtn {
     padding: 1rem 2rem;
     border: none;
     border-radius: 30px;
-    background: var(--accent-color);
+    background: var(--accent);
     color: white;
     cursor: pointer;
     transition: transform 0.2s, background 0.3s;
 }
 
 #searchBtn:hover {
-    background: var(--secondary-color);
-    transform: translateY(-1px);
+    background: #40407a;
+    transform: translateY(-2px);
 }
 
 .suggestions {
     position: absolute;
     width: 100%;
-    background: white;
+    background: var(--dark-primary);
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     z-index: 100;
     max-height: 300px;
     overflow-y: auto;
@@ -89,18 +91,19 @@ header {
     padding: 1rem;
     cursor: pointer;
     transition: background 0.2s;
+    color: var(--text-primary);
 }
 
 .suggestion-item:hover {
-    background: var(--background-color);
+    background: rgba(44, 44, 84, 0.3);
 }
 
 .team-info {
-    background: white;
+    background: var(--dark-primary);
     padding: 2rem;
     border-radius: 10px;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .team-header {
@@ -110,10 +113,11 @@ header {
     margin-bottom: 1.5rem;
 }
 
-.team-logo {
-    width: 100px;
-    height: 100px;
+.team-badge {
+    width: 120px;
+    height: 120px;
     object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
 }
 
 .players-grid {
@@ -123,11 +127,16 @@ header {
 }
 
 .player-card {
-    background: white;
+    background: var(--dark-primary);
     padding: 1.5rem;
     border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.player-card:hover {
+    transform: translateY(-5px);
 }
 
 .player-image {
@@ -136,6 +145,7 @@ header {
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 1rem;
+    border: 3px solid var(--accent);
 }
 
 .hidden {
@@ -149,5 +159,10 @@ header {
     
     #searchBtn {
         width: 100%;
+    }
+    
+    .team-header {
+        flex-direction: column;
+        text-align: center;
     }
 }
