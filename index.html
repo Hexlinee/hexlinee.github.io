@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Data</title>
+    <title>Football Team Finder</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-futbol"></i> Football Data</h1>
+            <h1><i class="fas fa-futbol"></i> Football Team Finder</h1>
         </header>
 
         <div class="search-section">
             <div class="search-box">
-                <input type="text" id="teamSearch" placeholder="Search for a team...">
+                <input type="text" id="teamSearch" list="teamList" placeholder="Search or select a team...">
+                <datalist id="teamList"></datalist>
                 <button id="searchBtn"><i class="fas fa-search"></i> Search</button>
             </div>
-            <div id="suggestions" class="suggestions"></div>
+            <div class="loading hidden" id="loading">
+                <div class="spinner"></div>
+                <span>Loading teams...</span>
+            </div>
         </div>
 
         <div id="teamInfo" class="team-info hidden">
