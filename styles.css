@@ -79,26 +79,25 @@ header {
     transform: translateY(-1px);
 }
 
-.suggestions {
-    position: absolute;
-    width: 100%;
-    background: var(--dark-surface);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    z-index: 100;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.suggestion-item {
+.loading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--secondary-color);
     padding: 1rem;
-    cursor: pointer;
-    transition: background 0.2s;
-    color: var(--text-primary);
 }
 
-.suggestion-item:hover {
-    background: rgba(255, 255, 255, 0.08);
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--secondary-color);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 .team-info {
